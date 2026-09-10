@@ -14,6 +14,12 @@ class DeezerController {
         this.proxy.init(null);
     }
 
+    get musicStatus() {
+        const meta = this.proxy.get_cached_property('PlaybackStatus')
+        if (!meta) return null;
+        return meta.recursiveUnpack();   // -> objet JS normal
+    }
+
     get currentTitle() {
         const meta = this.proxy.get_cached_property('Metadata');
         if (!meta) return null;
@@ -27,9 +33,11 @@ class DeezerController {
         // Affichage immédiat au lancement
         console.log('Titre courant : ' + this.currentTitle);
 
+
         // Mise à jour automatique à chaque changement
         this.proxy.connect('g-properties-changed', () => {
             console.log('Changement -> ' + this.currentTitle);
+            console.log('The music is ->' + this.musicStatus)
         });
     }
 }
