@@ -1,0 +1,8 @@
+{
+  "name": "Deezer Controller",
+  "description": "Control Deezer from the topbar",
+  "uuid": "deezer@controller.com",
+  "shell-version": [
+    "50"
+  ]
+}
