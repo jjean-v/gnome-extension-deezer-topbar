@@ -25,6 +25,8 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+import currentTitle from './dbus.js'
+
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
     _init() {
@@ -35,7 +37,8 @@ class Indicator extends PanelMenu.Button {
             style_class: 'system-status-icon',
         }));
 
-        const item = new PopupMenu.PopupMenuItem(_('Show Notification hello'));
+        let title = currentTitle()
+        const item = new PopupMenu.PopupMenuItem(_('Show Notification hello' + title));
         item.connect('activate', () => {
             Main.notify(_('Whatʼs up, folks?'));
         });
