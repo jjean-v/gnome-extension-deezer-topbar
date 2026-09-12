@@ -1,17 +1,37 @@
 import Gio from 'gi://Gio';
 //import GLib from 'gi://GLib';
 
+const path = '/org/mpris/MediaPlayer2';
+const playerInterface = `
+<node>
+<interface name="org.mpris.MediaPlayer2.Player">
+    <property name="PlaybackStatus" type="s" access="read" />
+    <method name="Next" />
+    <method name="Previous" />
+    <method name="PlayPause" />
+</interface>
+</node>
+`;
+
+const PlayerProxy = Gio.DBusProxy.makeProxyWrapper(playerInterface);
 
 export default class DeezerController {
+   
     constructor() {
-        this.proxy = new Gio.DBusProxy({
-            g_connection: Gio.DBus.session,
-            g_name: 'org.mpris.MediaPlayer2.deezer',
-            g_object_path: '/org/mpris/MediaPlayer2',
-            g_interface_name: 'org.mpris.MediaPlayer2.Player',
-            g_flags: Gio.DBusProxyFlags.NONE,
-        });
-        this.proxy.init(null);
+        this.proxy = null;
+    }
+
+    setupProxy(dest = 'org.mpris.MediaPlayer2.deezer') {
+        if (this.proxy)
+            return;
+
+        try {
+            // Get the MediaPlayer instance from the bus
+            this.proxy = new PlayerProxy(Gio.DBus.session, dest, path);
+        } catch (e) {
+            logError(e);
+            return;
+        }
     }
 
     get musicStatus() {
@@ -26,6 +46,12 @@ export default class DeezerController {
         const dict = meta.recursiveUnpack();   // -> objet JS normal
         return dict['xesam:title'];
     }
+
+    
+    pause() {
+        this.proxy.PlayPauseRemote();
+    }
+    
 
     // method to keep the proxy connected, only used of testing
     proxyConnected() {
