@@ -1,8 +1,8 @@
 import Gio from 'gi://Gio';
-import GLib from 'gi://GLib';
+//import GLib from 'gi://GLib';
 
 
-class DeezerController {
+export default class DeezerController {
     constructor() {
         this.proxy = new Gio.DBusProxy({
             g_connection: Gio.DBus.session,
@@ -43,6 +43,7 @@ class DeezerController {
 }
     
 
+/*
 const deezer = new DeezerController();
 
 
@@ -50,3 +51,4 @@ deezer.proxyConnected();
 // Boucle d'événements : garde le programme en vie pour écouter les signaux
 const loop = new GLib.MainLoop(null, false);
 loop.run();
+*/
