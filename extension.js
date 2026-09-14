@@ -73,29 +73,19 @@ class Pause extends St.Icon {
         this.connect('button-press-event', () => {
             console.log("\n\n\n\nThe song is on pause\n\n\n\n");
             deezer.pause();
+            if (deezer.isPlaying()) {
+                if (this.get_icon_name = pause)
+                    this.set_icon_name(play);
+            } else {
+                if (this.get_icon_name = play)
+                    this.set_icon_name(pause);
+            }
         });
     }
 
 });
 
-const Play = GObject.registerClass(
-class Play extends St.Icon {
-    _init() {
-        super._init({
-            track_hover: true,
-            can_focus: true,
-            reactive: true,
-            icon_name: play,
-            style_class: 'system-status-icon',
-        });
 
-        // Listen for update of left padding in settings
-        this.connect('button-press-event', () => {
-            console.log("\n\n\n\nThe song is on play\n\n\n\n");
-        });
-    }
-
-});
 
 const Next = GObject.registerClass(
 class Next extends St.Icon {
@@ -124,9 +114,9 @@ class Indicator extends PanelMenu.Button {
         super._init(0.0, _('My Shiny Indicator'));
 
         this.bar = new St.BoxLayout();
+
         this.bar.add_child(new Previous(deezer));
         this.bar.add_child(new Pause(deezer));
-        this.bar.add_child(new Play());
         this.bar.add_child(new Next(deezer));
 
         this.add_child(this.bar);

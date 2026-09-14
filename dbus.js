@@ -60,6 +60,10 @@ export default class DeezerController {
         this.proxy.NextRemote();
     }
 
+    isPlaying() {
+        return this.proxy.PlaybackStatus === 'Playing';
+    }
+
 
     // method to keep the proxy connected, only used of testing
     proxyConnected() {
