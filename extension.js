@@ -40,7 +40,7 @@ const pause     = 'media-playback-pause-symbolic';
 
 const Previous = GObject.registerClass(
 class Previous extends St.Icon {
-    _init() {
+    _init(deezer) {
         super._init({
             track_hover: true,
             can_focus: true,
@@ -52,6 +52,7 @@ class Previous extends St.Icon {
         // Listen for update of left padding in settings
         this.connect('button-press-event', () => {
             console.log("\n\n\n\nListen to previous song\n\n\n\n");
+            deezer.previous();
         });
     }
 
@@ -98,7 +99,7 @@ class Play extends St.Icon {
 
 const Next = GObject.registerClass(
 class Next extends St.Icon {
-    _init() {
+    _init(deezer) {
         super._init({
             track_hover: true,
             can_focus: true,
@@ -110,6 +111,7 @@ class Next extends St.Icon {
         // Listen for update of left padding in settings
         this.connect('button-press-event', () => {
             console.log("\n\n\n\nListen to next song\n\n\n\n");
+            deezer.next();
         });
     }
 
@@ -122,10 +124,10 @@ class Indicator extends PanelMenu.Button {
         super._init(0.0, _('My Shiny Indicator'));
 
         this.bar = new St.BoxLayout();
-        this.bar.add_child(new Previous());
+        this.bar.add_child(new Previous(deezer));
         this.bar.add_child(new Pause(deezer));
         this.bar.add_child(new Play());
-        this.bar.add_child(new Next());
+        this.bar.add_child(new Next(deezer));
 
         this.add_child(this.bar);
 

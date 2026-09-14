@@ -52,6 +52,14 @@ export default class DeezerController {
         this.proxy.PlayPauseRemote();
     }
     
+    previous() {
+        this.proxy.PreviousRemote();
+    }
+
+    next() {
+        this.proxy.NextRemote();
+    }
+
 
     // method to keep the proxy connected, only used of testing
     proxyConnected() {
