@@ -27,6 +27,9 @@ import DeezerController from './mediaPlayer.js'
 
 import GObject from 'gi://GObject';
 import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
 
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -37,6 +40,32 @@ const forward   = 'media-skip-forward-symbolic';
 const play      = 'media-playback-start-symbolic';
 const pause     = 'media-playback-pause-symbolic';
 
+// 1. Récupérer le chemin du dossier 'icons' de votre extension
+const iconPath = 'home/ubuntu-jean/.local/share/gnome-shell/extensions/deezer@controller.com';
+
+// 2. Ajouter ce chemin au thème d'icônes par défaut de GNOME
+
+     
+/*
+const DeezerLogo = GObject.registerClass(
+class DeezerLogo extends St.Icon {
+    _init() {
+        super._init({
+            gicon: Gio.icon_new_for_string(iconPath),
+            track_hover: true,
+            can_focus: true,
+            reactive: true,
+            style_class: 'system-status-icon',
+        });
+
+        // Listen for update of left padding in settings
+        this.connect('button-press-event', () => {
+            console.log("\n\n\n\nHello Deezer\n\n\n\n");
+        });
+    }
+
+});
+*/
 
 const Previous = GObject.registerClass(
 class Previous extends St.Icon {
@@ -107,6 +136,16 @@ class Next extends St.Icon {
 
 });
 
+const Title = GObject.registerClass(
+class Title extends St.Label {
+    _init(deezer) {
+        super._init({
+            text: deezer.currentTitle() ?? 'Rien en lecture',
+            y_align: Clutter.ActorAlign.CENTER,
+        });
+    }
+});
+
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
@@ -114,7 +153,9 @@ class Indicator extends PanelMenu.Button {
         super._init(0.0, _('My Shiny Indicator'));
 
         this.bar = new St.BoxLayout();
-
+        //this.bar.add_child(new DeezerLogo());
+    
+        this.bar.add_child(new Title(deezer));
         this.bar.add_child(new Previous(deezer));
         this.bar.add_child(new Pause(deezer));
         this.bar.add_child(new Next(deezer));
@@ -122,7 +163,7 @@ class Indicator extends PanelMenu.Button {
         this.add_child(this.bar);
 
         //title = deezer.currentTitle
-        const item = new PopupMenu.PopupMenuItem(_('You are listening to '));
+        const item = new PopupMenu.PopupMenuItem(_(deezer.currentTitle()));
         item.connect('activate', () => {
             Main.notify(_('Whatʼs up, folks?'));
         });
@@ -136,7 +177,7 @@ export default class IndicatorExampleExtension extends Extension {
         this.deezer = new DeezerController();
         this.deezer.setupProxy();
         this._indicator = new Indicator(this.deezer);
-        let title = this.deezer.currentTitle;
+        let title = this.deezer.currentTitle();
         console.log("\n\n\n\n" + title + "\n\n\n\n");
         Main.panel.addToStatusArea(this.uuid, this._indicator);
     }
