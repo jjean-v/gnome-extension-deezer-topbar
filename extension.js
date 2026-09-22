@@ -140,7 +140,7 @@ const Title = GObject.registerClass(
 class Title extends St.Label {
     _init(deezer) {
         super._init({
-            text: deezer.currentTitle() ?? 'Rien en lecture',
+            text: deezer.currentTitle(),
             y_align: Clutter.ActorAlign.CENTER,
         });
     }
@@ -154,8 +154,8 @@ class Indicator extends PanelMenu.Button {
 
         this.bar = new St.BoxLayout();
         //this.bar.add_child(new DeezerLogo());
-    
-        this.bar.add_child(new Title(deezer));
+        this.title = new Title(deezer);
+        this.bar.add_child(this.title);
         this.bar.add_child(new Previous(deezer));
         this.bar.add_child(new Pause(deezer));
         this.bar.add_child(new Next(deezer));
@@ -167,6 +167,11 @@ class Indicator extends PanelMenu.Button {
         item.connect('activate', () => {
             Main.notify(_('Whatʼs up, folks?'));
         });
+
+        deezer.onChange(() => {
+            this.title.set_text(deezer.currentTitle());
+        });
+
         this.menu.addMenuItem(item);
     }
 
@@ -177,8 +182,6 @@ export default class IndicatorExampleExtension extends Extension {
         this.deezer = new DeezerController();
         this.deezer.setupProxy();
         this._indicator = new Indicator(this.deezer);
-        let title = this.deezer.currentTitle();
-        console.log("\n\n\n\n" + title + "\n\n\n\n");
         Main.panel.addToStatusArea(this.uuid, this._indicator);
     }
 

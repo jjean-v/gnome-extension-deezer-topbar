@@ -28,6 +28,10 @@ export default class DeezerController {
         try {
             // Get the MediaPlayer instance from the bus
             this.proxy = new PlayerProxy(Gio.DBus.session, dest, path);
+            this.proxy.connect('g-properties-changed', () => {
+                if (this._callback) this._callback();   // c'est ICI que ça s'exécute, à chaque changement
+            });
+
         } catch (e) {
             logError(e);
             return;
@@ -66,19 +70,11 @@ export default class DeezerController {
     }
 
 
-    // method to keep the proxy connected, only used of testing
-    proxyConnected() {
-
-        // Affichage immédiat au lancement
-        console.log('Titre courant : ' + this.currentTitle);
-
-
-        // Mise à jour automatique à chaque changement
-        this.proxy.connect('g-properties-changed', () => {
-            console.log('Changement -> ' + this.currentTitle);
-            console.log('The music is ->' + this.musicStatus)
-        });
+    onChange(callback) {
+        this._callback = callback;
     }
+
+
 }
     
 
