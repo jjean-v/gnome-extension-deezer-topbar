@@ -44,12 +44,18 @@ export default class DeezerController {
         return meta.recursiveUnpack();   // -> objet JS normal
     }
 
-    currentTitle() {
+    currentTitle(){
         const meta = this.proxy.get_cached_property('Metadata');
         if (!meta) return "Aucun Media";
         const dict = meta.recursiveUnpack();   // -> objet JS normal
-        return dict['xesam:title'];
+        return String(dict['xesam:title']);
+    }
 
+    currentAlbum() {
+        const meta = this.proxy.get_cached_property('Metadata');
+        if (!meta) return "Aucun Album";
+        const dict = meta.recursiveUnpack();   // -> objet JS normal
+        return String(dict['xesam:album']);
     }
 
     

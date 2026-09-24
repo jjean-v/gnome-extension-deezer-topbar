@@ -164,12 +164,19 @@ class Indicator extends PanelMenu.Button {
 
         //title = deezer.currentTitle
         const item = new PopupMenu.PopupMenuItem(_(deezer.currentTitle()));
-        item.connect('activate', () => {
-            Main.notify(_('Whatʼs up, folks?'));
-        });
+
+        /*
+        deezer.onChange(() => {
+            item.set_text("hello");
+        })
+        */
+
+        item.setOrnament(PopupMenu.Ornament.DOT);
 
         deezer.onChange(() => {
             this.title.set_text(deezer.currentTitle());
+            item.label.text = deezer.currentAlbum();
+
         });
 
         this.menu.addMenuItem(item);
