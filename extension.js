@@ -154,27 +154,24 @@ class Indicator extends PanelMenu.Button {
 
         this.bar = new St.BoxLayout();
         //this.bar.add_child(new DeezerLogo());
-        this.title = new Title(deezer);
-        this.bar.add_child(this.title);
+        this.title_song = new Title(deezer);
+        this.title_author = new Title(deezer);
+
+        this.bar.add_child(this.title_author);
+        this.bar.add_child(this.title_song);
         this.bar.add_child(new Previous(deezer));
         this.bar.add_child(new Pause(deezer));
         this.bar.add_child(new Next(deezer));
 
         this.add_child(this.bar);
 
-        //title = deezer.currentTitle
         const item = new PopupMenu.PopupMenuItem(_(deezer.currentTitle()));
-
-        /*
-        deezer.onChange(() => {
-            item.set_text("hello");
-        })
-        */
 
         item.setOrnament(PopupMenu.Ornament.DOT);
 
         deezer.onChange(() => {
-            this.title.set_text(deezer.currentTitle());
+            this.title_song.set_text(deezer.currentTitle());
+            this.title_author.set_text(deezer.currentAuthor());
             item.label.text = deezer.currentAlbum();
 
         });

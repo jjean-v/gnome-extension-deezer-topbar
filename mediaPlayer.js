@@ -58,6 +58,12 @@ export default class DeezerController {
         return String(dict['xesam:album']);
     }
 
+    currentAuthor() {
+        const meta = this.proxy.get_cached_property('Metadata');
+        if (!meta) return "Aucun Album";
+        const dict = meta.recursiveUnpack();   // -> objet JS normal
+        return String(dict['xesam:author']);
+    }
     
     pause() {
         this.proxy.PlayPauseRemote();
